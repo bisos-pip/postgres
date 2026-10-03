@@ -1,8 +1,8 @@
 * B|
 ####+BEGIN: bxPanel:common/title-plus
-#+title: bisos-pip/bisos.airflow
+#+title: bisos-pip/bisos.postgres
 #+roam_tags: branch
-#+roam_key: bisos-core/bisos-pip/bisos.airflow
+#+roam_key: bisos-core/bisos-pip/bisos.postgres
 [[roam:bisos-core/bisos-pip]]
 ####+END
 ####+BEGIN: blee:bxPanel:topPanelControls
@@ -11,8 +11,8 @@
 **  [[elisp:(bap:magit:bisos:current-bpo-repos/visit)][BPO-Repos-Magit]] ||
 **  [[elisp:(blee:buf:re-major-mode)][Re-Major-Mode]] ||  [[elisp:(org-dblock-update-buffer-bx)][Update Buf Dblocks]] || [[elisp:(org-dblock-bx-blank-buffer)][Blank Buf Dblocks]] || [[elisp:(bx:panel:variablesShow)][bx:panel:variablesShow]]
 **  [[elisp:(blee:menu-sel:comeega:maintenance:popupMenu)][||Maintenance]]
-**  This File :: *= /bisos/panels/bisos-core/bisos-pip/bisos.airflow/_nodeBase_/fullUsagePanel-en.org =*
-* /file-truename:/  /bisos/git/auth/bxRepos/bisos-pip/airflow/py3/panels/bisos.airflow/_nodeBase_/fullUsagePanel-en.org
+**  This File :: *= /bisos/panels/bisos-core/bisos-pip/bisos.postgres/_nodeBase_/fullUsagePanel-en.org =*
+* /file-truename:/  /bisos/git/auth/bxRepos/bisos-pip/postgres/py3/panels/bisos.postgres/_nodeBase_/fullUsagePanel-en.org
 *  [[elisp:(org-cycle)][|#Select|]]  :: (Results: [[elisp:(blee:bnsm:results-here)][Here]] | [[elisp:(blee:bnsm:results-split-below)][Below]] | [[elisp:(blee:bnsm:results-split-right)][Right]] | [[elisp:(blee:bnsm:results-other)][Other]] | [[elisp:(blee:bnsm:results-popup)][Popup]]) (Select:  [[elisp:(lsip-local-run-command "lpCurrentsAdmin.sh -i currentsGetThenShow")][Show Currents]]  [[elisp:(lsip-local-run-command "lpCurrentsAdmin.sh")][lpCurrentsAdmin.sh]] ) [[elisp:(org-cycle)][| ]]
 **  #See:  (Window: [[elisp:(blee:bnsm:results-window-show)][?]] | [[elisp:(blee:bnsm:results-window-set 0)][0]] | [[elisp:(blee:bnsm:results-window-set 1)][1]] | [[elisp:(blee:bnsm:results-window-set 2)][2]] | [[elisp:(blee:bnsm:results-window-set 3)][3]] ) || [[elisp:(lsip-local-run-command-here "echo pushd dest")][echo pushd dir]] || [[elisp:(lsip-local-run-command-here "lsf")][lsf]] || [[elisp:(lsip-local-run-command-here "pwd")][pwd]] |
 **  [[elisp:(org-cycle)][|#Destinations|]] :: [[Evolution]] | [[Maintainers]]  [[elisp:(org-cycle)][| ]]
@@ -20,16 +20,15 @@
 ####+END
 ####+BEGIN: blee:bxPanel:title :panelType "=bxPanel=" :title "auto"
 * [[elisp:(show-all)][(>]] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-*   [[img-link:file:/bisos/blee/env/images/fpfByStarElipseTop-50.png][http://www.freeprotocols.org]]_ _   bisos--~Node:: bisos-core/bisos-pip -- bisos.airflow~   [[img-link:file:/bisos/blee/env/images/fpfByStarElipseBottom-50.png][http://www.by-star.net]]
+*   [[img-link:file:/bisos/blee/env/images/fpfByStarElipseTop-50.png][http://www.freeprotocols.org]]_ _   bisos--~Node:: bisos-core/bisos-pip -- bisos.postgres~   [[img-link:file:/bisos/blee/env/images/fpfByStarElipseBottom-50.png][http://www.by-star.net]]
 * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  [[elisp:(org-shifttab)][<)]] E|
 ####+END:
 ####+BEGIN: blee:bxPanel:terseTreeNavigator :panelsList "bxPanel"
 * [[elisp:(show-all)][(>]] [[elisp:(describe-function 'org-dblock-write:blee:bxPanel:terseTreeNavigator)][dbf]]
 * +
-*   =Decedents=  :: [[elisp:(dired "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/.aiActivity.cs")][ ~.aiActivity.cs~ ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/README")][README]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/dagDevelopmentTesting/_nodeBase_")][ =dagDevelopmentTesting= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/maintenanceAndDb/_nodeBase_")][ =maintenanceAndDb= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/monitoringLoggingAlerting/_nodeBase_")][ =monitoringLoggingAlerting= ]] *|*
-*   =Decedents=  :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/scalingExecutors/_nodeBase_")][ =scalingExecutors= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/serverSetup/_nodeBase_")][ =serverSetup= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/userManagement/_nodeBase_")][ =userManagement= ]] *|*
+*   =Decedents=  :: [[elisp:(dired "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/.aiActivity.cs")][ ~.aiActivity.cs~ ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/README")][README]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/dagDevelopmentTesting/_nodeBase_")][ =dagDevelopmentTesting= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/maintenanceAndDb/_nodeBase_")][ =maintenanceAndDb= ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/monitoringLoggingAlerting/_nodeBase_")][ =monitoringLoggingAlerting= ]] *|*
 *                                        *━━━━━━━━━━━━━━━━━━━━━━━━*
-*   *Siblings*   :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.airflow/_nodeBase_")][ = /<bisos.airflow>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.b/_nodeBase_")][ = /<bisos.b>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.banna/_nodeBase_")][ = /<bisos.banna>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.basics/_nodeBase_")][ = /<bisos.basics>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.binsprep/_nodeBase_")][ = /<bisos.binsprep>/ = ]] *|*
+*   *Siblings*   :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.postgres/_nodeBase_")][ = /<bisos.postgres>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.b/_nodeBase_")][ = /<bisos.b>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.banna/_nodeBase_")][ = /<bisos.banna>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.basics/_nodeBase_")][ = /<bisos.basics>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.binsprep/_nodeBase_")][ = /<bisos.binsprep>/ = ]] *|*
 *   *Siblings*   :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.bpo/_nodeBase_")][ = /<bisos.bpo>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.bxoGitlab/_nodeBase_")][ = /<bisos.bxoGitlab>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.capability/_nodeBase_")][ = /<bisos.capability>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.cmdb/_nodeBase_")][ = /<bisos.cmdb>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.common/_nodeBase_")][ = /<bisos.common>/ = ]] *|*
 *   *Siblings*   :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.crypt/_nodeBase_")][ = /<bisos.crypt>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.csPlayer/_nodeBase_")][ = /<bisos.csPlayer>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.csSeed/_nodeBase_")][ = /<bisos.csSeed>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.debian/_nodeBase_")][ = /<bisos.debian>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.dockerProc/_nodeBase_")][ = /<bisos.dockerProc>/ = ]] *|*
 *   *Siblings*   :: [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.examples/_nodeBase_")][ = /<bisos.examples>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.facter/_nodeBase_")][ = /<bisos.facter>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.gitist/_nodeBase_")][ = /<bisos.gitist>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.graphviz/_nodeBase_")][ = /<bisos.graphviz>/ = ]] *|* [[elisp:(blee:bnsm:panel-goto "/bisos/panels/bisos-core/bisos-pip/bisos.marmee/_nodeBase_")][ = /<bisos.marmee>/ = ]] *|*
@@ -38,14 +37,75 @@
 *   /Ancestors/  :: [[elisp:(blee:bnsm:panel-goto "//bisos/panels/bisos-core/bisos-pip/_nodeBase_")][ =bisos-pip= ]] *|* [[elisp:(blee:bnsm:panel-goto "//bisos/panels/bisos-core/_nodeBase_")][ =bisos-core= ]] *|* [[elisp:(blee:bnsm:panel-goto "//bisos/panels/_nodeBase_")][ = /<panels>/ = ]] *|* [[elisp:(dired "//bisos")][ ~bisos~ ]] *|*
 *                                   _━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━_                          [[elisp:(org-shifttab)][<)]] E|
 ####+END
-####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 :title "Overview and Use Cases" :anchor "Panel" :extraInfo "  /::Blank Starting Point::/"
-* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(outline-show-subtree+toggle)][| *Overview and Use Cases:* |]] <<Panel>>   /::Blank Starting Point::/  [[elisp:(org-shifttab)][<)]] E|
+####+BEGIN: blee:bxPanel:foldingSection :outLevel 1 :title "Overview and Use Cases" :anchor "Panel" :extraInfo "  /::Bedrock Database::/"
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(outline-show-subtree+toggle)][| *Overview and Use Cases:* |]] <<Panel>>   /::Bedrock Database::/  [[elisp:(org-shifttab)][<)]] E|
 ####+END
 ** +
-** Overview Comes Here.
+/bisos.postgres/ makes PostgreSQL the *bedrock* of BISOS: the sole database, and a generic
+layer on which other capabilities are built. Airflow, django-based packages and the other
+capabilities that need a database converge on it, each as a *tenant*, so that many
+capabilities can co-exist consistently on one host.
+
+A tenant is a PostgreSQL role plus a database of the same name, owned by that role. It is
+reached over the unix socket by peer authentication from the like-named OS account: no
+password and no secret anywhere. The administrator is the =postgres= OS account that Debian
+creates with the package.
+
+*What this package provides*: the capability that installs the server and the client
+development headers, and keeps the cluster running with =max_connections= of at least 200.
+It authors *no* systemd unit: Debian's =postgresql.service= is used as is, and tenants'
+units say =Requires=/=After= =postgresql.service=.
+
+*Materialization*: the CBM leaf =sys/cbm/collective/bedrock/postgres/= points to
+=postgres-cbs.pcs=, whose bundle is =postgres-sbom.pcs= alone. The CBM walker processes the
+=bedrock= capabilityType before all other types.
+
+*Not yet decided* (see the TODOs below and =AI-WorkPlan.org=): the interface through which a
+consumer asks for its role and database, =pg_hba.conf= ownership, major-version upgrades,
+backup, and adopting the already-running airflow tenant of this host.
+
+*Clients*, layered: =psql= (the baseline, in every bedrock install); Emacs (=sql-mode=, org-babel
+SQL, PGmacs) for Blee; DBeaver Community Edition as the optional GUI; and Microsoft's PostgreSQL
+extension for VS Code, an accommodation for proprietary environments. The BISOS Platform is
+edge-oriented and includes a desktop, so a GUI on a host is normal. The clients are a group sbom,
+=dbClients-sbom.pcs= (=postgresql-client=, and DBeaver through =dbeaver-sbom.pcs=, a file of its own),
+pulled in by =postgres-sbom.pcs= after the server steps; the group also stands alone, for a platform
+that needs only clients (written, not yet run). DBeaver comes
+from the vendor apt source, whose key is trusted on first use, and sends anonymous usage statistics
+by default (switched off per user in its Preferences). Whether the VS Code extension can
+use the unix socket with peer authentication is not confirmed.
+
+README: [[file:../../../../README.org][README.org]]
 ** -B|
 * +
 * -B|
+####+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :sep t :title "Pip and Pipx Package Installation" :anchor "Installation" :extraInfo "bisos.postgres"
+* /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Pip and Pipx Package Installation_: |]] <<Installation>> bisos.postgres  [[elisp:(org-shifttab)][<)]] E|
+####+END:
+####+BEGIN: blee:bxPanel:runResult :outLevel 1  :sep t :command "pipx install bisos.postgres"  :results "none" :comment "Pipx Package Installation" :afterComment ""
+* /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]     [[elisp:(lsip-local-run-command "pipx install bisos.postgres")][pipx install bisos.postgres]] *|*  =Pipx Package Installation= *|*    [[elisp:(org-shifttab)][<)]] E|
+####+END:
+####+BEGIN: blee:bxPanel:runResult :outLevel 1  :sep nil :command "pipx uninstall bisos.postgres"  :results "none" :comment "Pipx Package Un-Installation" :afterComment ""
+* [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]     [[elisp:(lsip-local-run-command "pipx uninstall bisos.postgres")][pipx uninstall bisos.postgres]] *|*  =Pipx Package Un-Installation= *|*    [[elisp:(org-shifttab)][<)]] E|
+####+END:
+####+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :sep t :title "Command Services --- Examples Menus" :anchor "Command" :extraInfo "CLI"
+* /[[elisp:(beginning-of-buffer)][|^]]  [[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_     [[elisp:(outline-show-subtree+toggle)][| _Command Services --- Examples Menus_: |]] <<Command>> CLI  [[elisp:(org-shifttab)][<)]] E|
+####+END
+####+BEGIN: blee:panel:icm:py:intro :outLevel 1 :sep t :folding? nil :label "CS" :icmName "postgresAdmin.cs" :comment "Admin examples" :afterComment "-- -i examples"
+* /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /CS/ :: [[elisp:(lsip-local-run-command "postgresAdmin.cs -i examples")][postgresAdmin.cs]]  [[elisp:(lsip-local-run-command "postgresAdmin.cs -i visit")][visit]]  [[elisp:(lsip-local-run-command "which -a postgresAdmin.cs")][which -a]]  [[elisp:(lsip-local-run-command "postgresAdmin.cs -i describe")][describe]] *|*  =Admin examples= *|*  -- -i examples [[elisp:(org-shifttab)][<)]] E|
+####+END
+####+BEGIN: blee:panel:icm:py:intro :outLevel 1 :sep nil :folding? nil :label "CS" :icmName "quickPostgres.cs" :comment "Cheat sheet examples" :afterComment "-- -i examples"
+* /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /CS/ :: [[elisp:(lsip-local-run-command "quickPostgres.cs -i examples")][quickPostgres.cs]]  [[elisp:(lsip-local-run-command "quickPostgres.cs -i visit")][visit]]  [[elisp:(lsip-local-run-command "which -a quickPostgres.cs")][which -a]]  [[elisp:(lsip-local-run-command "quickPostgres.cs -i describe")][describe]] *|*  =Cheat sheet examples= *|*  -- -i examples [[elisp:(org-shifttab)][<)]] E|
+####+END
+####+BEGIN: blee:panel:icm:py:intro :outLevel 1 :sep nil :folding? nil :label "CS" :icmName "postgres-sbom.pcs" :comment "Bill of materials" :afterComment "-- -i examples"
+* /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
+* [[elisp:(show-all)][(>]] [[elisp:(blee:menu-sel:outline:popupMenu)][+-]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]]  /CS/ :: [[elisp:(lsip-local-run-command "postgres-sbom.pcs -i examples")][postgres-sbom.pcs]]  [[elisp:(lsip-local-run-command "postgres-sbom.pcs -i visit")][visit]]  [[elisp:(lsip-local-run-command "which -a postgres-sbom.pcs")][which -a]]  [[elisp:(lsip-local-run-command "postgres-sbom.pcs -i describe")][describe]] *|*  =Bill of materials= *|*  -- -i examples [[elisp:(org-shifttab)][<)]] E|
+####+END
 ####+BEGIN: blee:bxPanel:separator :outLevel 1
 * /[[elisp:(beginning-of-buffer)][|^]] [[elisp:(blee:menu-sel:navigation:popupMenu)][==]] [[elisp:(delete-other-windows)][|1]]/
 ####+END
@@ -57,7 +117,15 @@
 ####+BEGIN: blee:bxPanel:foldingSection :outLevel 2 :title "Notes, Ideas, Tasks, Agenda" :anchor "Tasks"
 ** [[elisp:(show-all)][(>]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(outline-show-subtree+toggle)][| /Notes, Ideas, Tasks, Agenda:/ |]] <<Tasks>>   [[elisp:(org-shifttab)][<)]] E|
 ####+END
-*** TODO Some Idea
+*** TODO [#A] Decide the role/db provisioning interface: a function in bisos.postgres or a declarative sbom entry
+*** TODO [#A] Adopt the live cluster, role and database of the airflow tenant without re-creating them
+*** TODO [#B] Run dbClients-sbom.pcs (and dbeaver-sbom.pcs) on a VM; pin the vendor key fingerprint
+*** TODO [#B] Confirm unix-socket support of the VS Code PostgreSQL extension and of DBeaver; decide the password-exception rule
+*** TODO [#B] Own pg_hba.conf: a managed fragment, so no tenant edits the file directly
+*** TODO [#B] Major-version upgrade (pg_upgradecluster) is a bedrock concern, never a tenant's
+*** TODO [#B] Backup and restore of a database shared by every capability
+*** TODO [#C] Per-tenant isolation: revoke PUBLIC connect on tenant databases; per-role connection limits
+*** TODO [#C] Check whether bisos.cmdb or bisos.debian already model a database layer
 ####+BEGIN: blee:bxPanel:evolutionMaintainers
 ** [[elisp:(show-all)][(>]] [[elisp:(describe-function 'org-dblock-write:blee:bxPanel:evolutionMaintainers)][dbf]]
 ** [[elisp:(show-all)][|n]]  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_  _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_       [[elisp:(org-cycle)][| /Bug Reports, Development Team:/ | ]]  <<Maintainers>>
@@ -76,7 +144,7 @@
 #+STARTUP: inlineimages
 #+SEQ_TODO: TODO WAITING DELEGATED | DONE DEFERRED CANCELLED
 #+TAGS: @desk(d) @home(h) @work(w) @withInternet(i) @road(r) call(c) errand(e)
-#+CATEGORY: N:bisos.airflow
+#+CATEGORY: N:bisos.postgres
 
 ####+END
 ####+BEGIN: blee:bxPanel:footerEmacsParams :primMode "org-mode"

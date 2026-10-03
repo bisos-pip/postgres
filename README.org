@@ -1,172 +1,190 @@
-#+title: bisos.airflow: Apache Airflow platform management via BISOS Capability Bundles
-#+DATE: <2026-08-11 Tue>
+#+title: bisos.postgres: PostgreSQL as the bedrock database of BISOS
+#+DATE: <2026-10-03 Sat>
 #+AUTHOR: Mohsen BANAN
 #+OPTIONS: toc:4
 
-#+BEGIN: b:org:pypi:readme/topControls :pkgName "airflow" :comment "basic"
+#+BEGIN: b:org:pypi:readme/topControls :pkgName "postgres" :comment "basic"
 
 |----------------------+------------------------------------------------------------------|
 | ~Blee Panel Controls~: | [[elisp:(show-all)][Show-All]] : [[elisp:(org-shifttab)][Overview]] : [[elisp:(progn (org-shifttab) (org-content))][Content]] : [[elisp:(delete-other-windows)][(1)]] : [[elisp:(progn (save-buffer) (kill-buffer))][S&Q]] : [[elisp:(save-buffer)][Save]]  : [[elisp:(kill-buffer)][Quit]]  : [[elisp:(bury-buffer)][Bury]] |
-| ~Panel Links~:         | [[file:./py3/panels/bisos.airflow/_nodeBase_/fullUsagePanel-en.org][Repo Blee Panel]] --  [[file:/bisos/git/auth/bxRepos/bisos-pip/airflow/py3/panels/bisos.airflow/_nodeBase_/fullUsagePanel-en.org][Blee Panel]]                                   |
-| ~See Also~:            | [[https://pypi.org/project/bisos.airflow][At PYPI]] : [[https://github.com/bisos-pip/pycs][bisos.PyCS]]                                             |
+| ~Panel Links~:         | [[file:./py3/panels/bisos.postgres/_nodeBase_/fullUsagePanel-en.org][Repo Blee Panel]] --  [[file:/bisos/git/auth/bxRepos/bisos-pip/postgres/py3/panels/bisos.postgres/_nodeBase_/fullUsagePanel-en.org][Blee Panel]]                                   |
+| ~See Also~:            | [[https://pypi.org/project/bisos.postgres][At PYPI]] : [[https://github.com/bisos-pip/pycs][bisos.PyCS]]                                             |
 |----------------------+------------------------------------------------------------------|
 
 #+END:
 
 * Overview
 
-/bisos.airflow/ is a BISOS package for managing an Apache Airflow platform ---
-webserver (API server), scheduler, triggerer, metadata database, and DAG
-development/testing --- as a BISOS Capability Bundle (CBS/CBM) of
-=systemd=-planted Command Services.
+/bisos.postgres/ makes PostgreSQL the *bedrock* of BISOS: the sole database, and a generic
+layer on which other capabilities are built. Airflow, django-based packages and every other
+capability that needs a database converge on it, each as a *tenant*. In the BISOS model many
+capabilities co-exist consistently on one host (typically one of several multi-tenant VMs),
+and a single, well-known database layer is what lets them do so.
 
-With CBM (Capability Bundle Materialization), Airflow's four processes are
-installed as independent host =systemd= units rather than one monolithic
-=airflow standalone= process: a planted pointer leaf
-(=cbmProc.spcs=) subprocess-invokes a Capability Bundle Specification
-(=airflow-cbs.pcs=) which declares package installation (sbom), the four
-=systemd= units, and the assembly step needed to bring up a working
-=airflow.here= installation on a single host. This gives independent
-start/stop/status and independent logs per role, without the operational
-overhead of a distributed executor (Celery/Kubernetes) or containers.
+The package is a BISOS Capability Bundle (CBS/CBM). A planted pointer leaf
+(=cbmProc.spcs= at =sys/cbm/collective/bedrock/postgres/=) subprocess-invokes a Capability
+Bundle Specification (=postgres-cbs.pcs=), whose bundle is the package installation
+(=postgres-sbom.pcs=). The CBM walker processes the =bedrock= capabilityType before all
+other capability types, so tenants find the cluster already running.
 
-#+BEGIN: b:org:pypi:readme/pkgDocumentation :pkgName "airflow-cs" :comment "basic"
+#+BEGIN: b:org:pypi:readme/pkgDocumentation :pkgName "postgres-cs" :comment "basic"
 
 # PYPI Documentation Comes Here in _description.org
 #+END:
 
-* Capability Materialization
-
-The figure below shows the top-down layering of =airflow.here='s Capability
-Materialization: the planted CBM pointer leaf
-(=/bisos/platform/sys/cbm/collective/hereWeb/airflow/cbmProc.spcs=) points to
-(and does *not* duplicate) the CBS (=py3/bin/airflow-cbs.pcs=), which declares
-the bundle of =airflow-sbom.pcs=, the 4 =airflow-*-sysd.pcs= units, and
-=airflow-assemble.cs=. =py3/bin/airflowAdmin.cs= sits below all of that as the
-day-to-day admin-facing CS an operator runs against the materialized
-installation.
-
-[[file:py3/images/airflowCapabilityMaterialization.png]]
-
-*Regenerate this figure* (after editing =py3/images/airflow-graphviz.pcs=):
-
-: cd py3/images
-: ./airflow-graphviz.pcs --format=all -i ngProcess all
-
 * Table of Contents     :TOC:
 - [[#overview][Overview]]
-- [[#capability-materialization][Capability Materialization]]
-- [[#the-4-systemd-units-and-db-init][The 4 systemd Units and DB Init]]
+- [[#the-tenant-model][The Tenant Model]]
+- [[#what-this-package-does-and-does-not-do][What This Package Does And Does Not Do]]
 - [[#installation][Installation]]
   - [[#installation-with-pip][Installation With pip]]
   - [[#installation-with-pipx][Installation With pipx]]
 - [[#usage][Usage]]
-  - [[#day-to-day-admin-airflowadmincs][Day-to-Day Admin: =airflowAdmin.cs=]]
-  - [[#direct-airflow-cli-cheat-sheet-quickairflowcs][Direct Airflow CLI Cheat Sheet: =quickAirflow.cs=]]
+  - [[#cluster-and-tenants-information-postgresadmincs][Cluster and Tenants Information: postgresAdmin.cs]]
+  - [[#direct-postgresql-cheat-sheet-quickpostgrescs][Direct PostgreSQL Cheat Sheet: quickPostgres.cs]]
+- [[#clients][Clients]]
 - [[#key-files][Key Files]]
 - [[#part-of-bisos--bystar-internet-services-operating-system][Part of BISOS — ByStar Internet Services Operating System]]
 - [[#documentation-and-blee-panels][Documentation and Blee-Panels]]
 - [[#support][Support]]
+- [[#planned-improvements][Planned Improvements]]
 
-* The 4 systemd Units and DB Init
+* The Tenant Model
 
-Four planted =*-sysd.pcs= units live in =py3/bin/=, all delegating to the same
-=airflow= CLI executable, each running a different sub-command:
+A *tenant* of the bedrock database is a PostgreSQL role plus a database of the same name,
+owned by that role. The tenant's service runs as an OS account of the same name, and
+connects over the unix socket (=/var/run/postgresql=) with *peer authentication*: PostgreSQL
+maps the connecting OS account to the like-named role. No password and no secret exists
+anywhere.
 
-| Unit                          | Airflow role                  | =ExecStart= sub-command         | Type                       | Ordering                            |
-|-------------------------------+--------------------------------+----------------------------------+----------------------------+--------------------------------------|
-| =airflow-db-sysd.pcs=          | DB migration                  | =airflow db migrate=             | =oneshot=, =RemainAfterExit=yes= | =After=network.target=; runs first  |
-| =airflow-webserver-sysd.pcs=   | API/Web server                | =airflow api-server --port ...=  | long-running =simple=       | =Requires=/=After=airflow-db.service= |
-| =airflow-scheduler-sysd.pcs=   | Scheduler                     | =airflow scheduler=              | long-running =simple=       | =Requires=/=After=airflow-db.service= |
-| =airflow-triggerer-sysd.pcs=   | Triggerer (deferrable tasks)  | =airflow triggerer=              | long-running =simple=       | =Requires=/=After=airflow-db.service= |
+The administrator is the =postgres= OS account (and role) that Debian creates with the
+=postgresql= package. Only the bedrock capability administers the cluster; a tenant never
+does.
 
-=airflow-db-sysd.pcs= is a =oneshot= unit with =RemainAfterExit=yes=: it runs
-=airflow db migrate= once to bring the metadata database schema up to date,
-then reports itself "active" without staying resident. The three long-running
-units each declare =Requires=/=After=airflow-db.service=, so systemd
-guarantees the migration has been attempted before any of the three service
-processes starts.
+A tenant unit declares its dependency with =Requires=/=After= =postgresql.service=.
 
-All four units, together with package installation, are declared by
-=py3/bin/airflow-cbs.pcs= and materialized at this host via
-=py3/bin/cbmProc-airflow.spcs=.
+* What This Package Does And Does Not Do
+
+Does:
+
+1) Installs the =postgresql= server and the =libpq-dev= client headers (apt).
+2) Makes sure the cluster is enabled and running, discovering its version and name rather
+   than hardcoding them.
+3) Sets =max_connections= to at least 200, the baseline every tenant may assume. The value
+   is server-wide, so it is owned here and not by any one consumer.
+
+Does not:
+
+- Author a systemd unit. Debian's =postgresql.service= is used as is.
+- Provision tenants (roles and databases). For now each consumer creates its own; a shared
+  provisioning interface is an open item (see Planned Improvements).
+- Install Python drivers (=psycopg2=, =asyncpg=, ...). Those belong to each consumer's sbom.
 
 * Installation
 
-The sources for the bisos.airflow pip package are maintained at:\\
-https://github.com/bisos-pip/airflow
+The sources for the bisos.postgres pip package are maintained at:\\
+https://github.com/bisos-pip/postgres
 
-The bisos.airflow pip package is available at PYPI as\\
-https://pypi.org/project/bisos.airflow
+The bisos.postgres pip package is available at PYPI as\\
+https://pypi.org/project/bisos.postgres
 
-You can install bisos.airflow with pip or pipx.
+You can install bisos.postgres with pip or pipx.
 
 ** Installation With pip
 
-If you need access to bisos.airflow as a python module, install it with pip:
+If you need access to bisos.postgres as a python module, install it with pip:
 
 #+begin_src bash
-pip install bisos.airflow
+pip install bisos.postgres
 #+end_src
 
 ** Installation With pipx
 
-If you only need access to bisos.airflow on the command line, install it with pipx:
+If you only need access to bisos.postgres on the command line, install it with pipx:
 
 #+begin_src bash
-pipx install bisos.airflow
+pipx install bisos.postgres
 #+end_src
 
 The following commands are made available:
 
-- =airflowAdmin.cs= --- day-to-day admin CS for this host's =airflow.here= installation.
-- =quickAirflow.cs= --- direct-command cheat sheet for the =airflow= CLI and its =systemd= units.
-- =airflow-cbs.pcs= --- Capability Bundle Specification: declares sbom + the 4 sysd units + assemble.
-- =cbmProc-airflow.spcs= --- planted CBM pointer that materializes the CBS at this host.
-- =airflow-sbom.pcs= --- package installation via [[https://github.com/bisos-pip/sbom][bisos.sbom]].
-- =airflow-db-sysd.pcs=, =airflow-webserver-sysd.pcs=, =airflow-scheduler-sysd.pcs=, =airflow-triggerer-sysd.pcs= --- the 4 systemd units.
-- =airflow-assemble.cs= --- assembly/glue step.
-- =airflow-here-dns.pcs= --- registers the =.here= fake-domain DNS entry (=airflow.here=).
+- =postgresAdmin.cs= --- read-only information about this host's cluster and its tenants.
+- =quickPostgres.cs= --- direct-command cheat sheet for =psql=, =pg_*= and the =postgresql= service.
+- =postgres-cbs.pcs= --- Capability Bundle Specification: declares the sbom.
+- =cbmProc-postgres.spcs= --- planted CBM pointer that materializes the CBS at this host.
+- =postgres-sbom.pcs= --- package installation via [[https://github.com/bisos-pip/sbom][bisos.sbom]].
+- =dbClients-sbom.pcs= --- the database clients, run by =postgres-sbom.pcs=; and =dbeaver-sbom.pcs=, the DBeaver Community Edition client, run by it.
 
 * Usage
 
-** Day-to-Day Admin: =airflowAdmin.cs=
+** Cluster and Tenants Information: =postgresAdmin.cs=
 
-Run with no arguments (or =-i examples=) to see the full menu. Key
-sub-commands:
-
-#+begin_src bash
-airflowAdmin.cs -i hostInfo       # fqdn, port, AIRFLOW_HOME, DAG dir, log dir
-airflowAdmin.cs -i servicesInfo   # links for operating the 4 systemd units
-airflowAdmin.cs -i usersInfo      # list/create users; default admin/password
-airflowAdmin.cs -i fullUpdate     # all three together
-#+end_src
-
-** Direct Airflow CLI Cheat Sheet: =quickAirflow.cs=
-
-For direct =airflow= CLI / =systemctl= / =journalctl= invocations (not routed
-through =airflowAdmin.cs=), run:
+Run with no arguments (or =-i examples=) to see the full menu. Key sub-commands:
 
 #+begin_src bash
-quickAirflow.cs
+postgresAdmin.cs -i clusterInfo   # cluster, service, version, data dir, max_connections
+postgresAdmin.cs -i tenantsInfo   # roles, databases, connections
+postgresAdmin.cs -i fullUpdate    # both together
 #+end_src
+
+** Direct PostgreSQL Cheat Sheet: =quickPostgres.cs=
+
+For direct =psql= / =pg_lsclusters= / =systemctl= / =journalctl= invocations, run:
+
+#+begin_src bash
+quickPostgres.cs
+#+end_src
+
+* Clients
+
+Standardizing on PostgreSQL also means choosing which clients are used with it. There is
+no single tool; there is one per context, layered:
+
+| Context                              | Client                                  | Notes                                               |
+|--------------------------------------+-----------------------------------------+-----------------------------------------------------|
+| Every host, every VM                 | =psql= (=postgresql-client=)            | The baseline. Works with peer authentication over the unix socket, no password. |
+| Blee (Libre-Halaal, Emacs)           | =sql-mode= and org-babel SQL; [[https://emacsconf.org/2024/talks/pgmacs][PGmacs]] | SQL lives in org files beside the documentation. PGmacs browses and edits tables over the network or a unix socket. |
+| Graphical, optional                  | [[https://dbeaver.io/about/][DBeaver]] Community Edition             | Apache 2.0. Over a unix socket it needs junixsocket driver properties. |
+| VS Code, in proprietary environments | Microsoft's [[https://learn.microsoft.com/en-us/azure/postgresql/extensions/vs-code-extension/overview][PostgreSQL extension]] | See below. |
+
+The clients are installed by a group sbom, =dbClients-sbom.pcs=: =postgresql-client= (=psql=) and,
+through its own file =dbeaver-sbom.pcs=, DBeaver. The group stands alone, for a platform that needs
+only clients to reach a cluster on another host; =postgres-sbom.pcs= pulls it in, after the server
+steps, so a host that runs the server gets the clients too and a failure in a client cannot undo
+the server. DBeaver is not in Debian's
+own apt, so it comes from the vendor repository; the vendor key is fetched over https and trusted
+on first use. DBeaver Community Edition sends anonymous usage statistics by default; each user can
+switch that off under Window > Preferences > General > Usage Statistics. The BISOS Platform is
+edge-oriented and includes a desktop, so a graphical client on a host is normal.
+
+** VS Code
+
+Some environments require VS Code, and they are proprietary ones. For them the client is
+Microsoft's PostgreSQL extension for VS Code (=ms-ossdata.vscode-postgresql= in the
+Marketplace). Blee remains the Libre-Halaal answer; VS Code is an accommodation, not a
+replacement for it.
+
+The extension's documented connection profile asks for a hostname, database, user and
+password. *Whether it can connect over the unix socket with peer authentication has not been
+confirmed.* If it cannot, using it against a bedrock cluster needs a TCP listener, a
+=pg_hba.conf= entry and a password: an exception to the tenant model, where no secret exists
+anywhere. Such an exception is for the bedrock layer to own and to grant deliberately, not
+for a tenant or a developer to configure ad hoc. See Planned Improvements.
 
 * Key Files
 
-An overview of the relevant files of the bisos.airflow package (starting-point;
-to be expanded as the package develops):
+An overview of the relevant files of the bisos.postgres package (starting point; to be
+expanded as the package develops):
 
-- =py3/bin/airflowAdmin.cs= --- day-to-day admin CS (hostInfo, servicesInfo, usersInfo, fullUpdate).
-- =py3/bin/quickAirflow.cs= --- direct-command cheat sheet for the =airflow= CLI and systemd units.
-- =py3/bin/airflow-cbs.pcs= --- CBS declaring the bundle (sbom + 4 sysd units + assemble).
-- =py3/bin/cbmProc-airflow.spcs= --- planted CBM pointer leaf that materializes the CBS.
-- =py3/bin/airflow-sbom.pcs= --- package installation via [[https://github.com/bisos-pip/sbom][bisos.sbom]].
-- =py3/bin/airflow-db-sysd.pcs= --- oneshot DB migration unit.
-- =py3/bin/airflow-webserver-sysd.pcs=, =airflow-scheduler-sysd.pcs=, =airflow-triggerer-sysd.pcs= --- the three long-running units.
-- =py3/bin/airflow-assemble.cs= --- assembly/glue step.
-- =py3/bin/airflow-here-dns.pcs= --- =.here= fake-domain DNS registration for =airflow.here=.
-- =py3/images/airflow-graphviz.pcs= --- source for the Capability Materialization figure.
-- =py3/tests/verify.sh= --- smoke test for =airflowAdmin.cs= and =quickAirflow.cs=.
+- =py3/bin/postgres-sbom.pcs= --- package installation: server, client headers, cluster running with the connection baseline.
+- =py3/bin/dbClients-sbom.pcs= --- the database clients: =postgresql-client=, and =dbeaver-sbom.pcs=; stands alone, and is pulled in by =postgres-sbom.pcs=.
+- =py3/bin/dbeaver-sbom.pcs= --- DBeaver Community Edition: the vendor apt source and the package; pulled in by =dbClients-sbom.pcs=.
+- =py3/bin/postgres-cbs.pcs= --- CBS declaring the bundle (the sbom alone: no assemble step, no units).
+- =py3/bin/cbmProc-postgres.spcs= --- planted CBM pointer leaf for =sys/cbm/collective/bedrock/postgres/=.
+- =py3/bin/postgresAdmin.cs= --- cluster and tenants information (clusterInfo, tenantsInfo, fullUpdate).
+- =py3/bin/quickPostgres.cs= --- direct-command cheat sheet.
+- =py3/bisos/postgres/= --- the library surface; empty so far.
+- =py3/tests/verify.sh= --- smoke test for the command services.
 - =py3/setup.py=, =py3/pypiProc.sh= --- PyPI packaging (setup.py is dblock-driven; do not hand-edit).
 
 * Part of BISOS — ByStar Internet Services Operating System
@@ -181,22 +199,22 @@ for information about getting started with BISOS.
 is described as a cure for losses of autonomy and privacy in a book titled:
 [[https://github.com/bxplpc/120033][Nature of Polyexistentials]]
 
-/bisos.airflow/ is part of BISOS. It is a standalone package that can
+/bisos.postgres/ is part of BISOS. It is a standalone package that can
 be used independently of the full BISOS environment.
 
 * Documentation and Blee-Panels
 
-bisos.airflow is part of the ByStar Digital Ecosystem
+bisos.postgres is part of the ByStar Digital Ecosystem
 [[http://www.by-star.net]].
 
 This module's primary documentation is in the form of Blee-Panels.
 Blee-Panels are in the =./py3/panels= directory. From within Blee and
 BISOS these panels are accessible under the Blee "Panels" menu.
 
-See [[file:./py3/panels/bisos.airflow/_nodeBase_/fullUsagePanel-en.org]]
+See [[file:./py3/panels/bisos.postgres/_nodeBase_/fullUsagePanel-en.org]]
 for a starting point.
 
-/bisos.airflow/ is best developed with [[https://github.com/bx-blee][Blee]], the /By* BISOS
+/bisos.postgres/ is best developed with [[https://github.com/bx-blee][Blee]], the /By* BISOS
 Libre-Halaal Emacs Environment/ --- a layer on top of Emacs and BISOS
 which creates a comprehensive integrated usage and development
 environment.
@@ -208,6 +226,13 @@ author/maintainer\\
 [[http://mohsen.1.banan.byname.net][Mohsen Banan]] at:
 [[http://mohsen.1.banan.byname.net/contact]]
 
+* Planned Improvements
+
+** TODO Decide the interface through which a consumer asks for its role and database
+** TODO Adopt the live cluster of this host, with its existing airflow tenant, without re-creating anything
+** TODO Own pg_hba.conf, backup and restore, and major-version upgrades at the bedrock level
+** TODO Confirm whether Microsoft's VS Code PostgreSQL extension can use the unix socket with peer authentication; if not, decide how bedrock grants a TCP and password exception
+** TODO Confirm DBeaver Community Edition's telemetry setting and its unix-socket connection on a current version
 
 # Local Variables:
 # eval: (setq-local toc-org-max-depth 4)

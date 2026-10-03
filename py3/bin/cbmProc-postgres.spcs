@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 """ #+begin_org
-* cbmProc.spcs --- airflow as a hereWeb-collective capability
+* cbmProc.spcs --- postgres as a bedrock-collective capability
 *
-* Planted location: sys/cbm/collective/hereWeb/airflow/cbmProc.spcs
+* Planted location: sys/cbm/collective/bedrock/postgres/cbmProc.spcs
 * Realm:            collective
-* CapabilityType:   hereWeb    (HTTP via .here fake domain)
-* CapabilityName:   airflow    (accessible as airflow.here)
+* CapabilityType:   bedrock    (a capability others are built on; no .here fqdn)
+* CapabilityName:   postgres   (the sole database of BISOS)
+*
+* The CBM walker processes the bedrock capabilityType before all others, so
+* tenants such as airflow find the cluster already running.
 *
 * CBM sits on top of CBS --- it does NOT duplicate CBS content.
 * This file is a *pointer* to the CBS executable. cbm_* verbs
@@ -23,7 +26,6 @@ from bisos.capability import cbmProc_seed  # noqa: F401  _atExit_
 # --- declare which capability this leaf represents + point to CBS ---
 from bisos.capability import cbmProc_seedInfo
 cbmProc_seedInfo.setup(
-    capabilityName="airflow",
-    cbsSpec="/bisos/git/bxRepos/bisos-pip/airflow/py3/bin/airflow-cbs.pcs",
-
+    capabilityName="postgres",
+    cbsSpec="/bisos/git/bxRepos/bisos-pip/postgres/py3/bin/postgres-cbs.pcs",
 )

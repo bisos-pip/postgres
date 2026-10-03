@@ -8,38 +8,44 @@ if [[ "$(basename "$PWD")" != "tests" ]]; then
     exit 1
 fi
 
-# Starting-point smoke test for bisos.airflow -- covers airflowAdmin.cs (primary
-# target for this starting point) and quickAirflow.cs. Converted from
-# bisos.dockerProc's py3/tests/verify.sh; will be expanded as the package develops.
+# Starting-point smoke test for bisos.postgres -- covers postgresAdmin.cs and
+# quickPostgres.cs, and that the sbom, CBS and CBM leaf parse. Everything here is
+# read-only: it neither installs nor materializes anything. Will be expanded as
+# the package develops.
 
 # --- CS entry points: smoke test (no args → examples/usage, non-zero ok) ---
 
-lpDo ../bin/airflowAdmin.cs
-lpDo ../bin/quickAirflow.cs
+lpDo ../bin/postgresAdmin.cs
+lpDo ../bin/quickPostgres.cs
 
-# --- airflowAdmin.cs: each admin sub-Cmnd runs and produces examples output ---
+# --- postgresAdmin.cs: each admin sub-Cmnd runs and produces examples output ---
 
-lpDo ../bin/airflowAdmin.cs -i examples
-lpDo ../bin/airflowAdmin.cs -i hostInfo
-lpDo ../bin/airflowAdmin.cs -i servicesInfo
-lpDo ../bin/airflowAdmin.cs -i usersInfo
-lpDo ../bin/airflowAdmin.cs -i fullUpdate
+lpDo ../bin/postgresAdmin.cs -i examples
+lpDo ../bin/postgresAdmin.cs -i clusterInfo
+lpDo ../bin/postgresAdmin.cs -i tenantsInfo
+lpDo ../bin/postgresAdmin.cs -i fullUpdate
 
-# --- quickAirflow.cs: default examples entry runs ---
+# --- quickPostgres.cs: default examples entry runs ---
 
-lpDo ../bin/quickAirflow.cs -i examples
+lpDo ../bin/quickPostgres.cs -i examples
 
-# --- airflowAdmin.cs: import + class presence smoke test ---
+# --- postgres-sbom.pcs: readme is read-only (the sbom_* verbs install, so not run here) ---
+
+lpDo ../bin/postgres-sbom.pcs -i readme
+lpDo ../bin/dbClients-sbom.pcs -i readme
+lpDo ../bin/dbeaver-sbom.pcs -i readme
+
+# --- postgresAdmin.cs: import + class presence smoke test ---
 
 lpDo python3 -c "
 import importlib.util, sys
 
-spec = importlib.util.spec_from_file_location('airflowAdmin', '../bin/airflowAdmin.cs')
+spec = importlib.util.spec_from_file_location('postgresAdmin', '../bin/postgresAdmin.cs')
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 
 expectedCmnds = [
-    'examples', 'fullUpdate', 'hostInfo', 'servicesInfo', 'usersInfo',
+    'examples', 'fullUpdate', 'clusterInfo', 'tenantsInfo',
 ]
 
 failed = 0
@@ -50,8 +56,8 @@ for n in expectedCmnds:
         print(f'  [PASS] Cmnd present: {n}')
 
 if failed:
-    print(f'airflowAdmin.cs: {failed} test(s) FAILED')
+    print(f'postgresAdmin.cs: {failed} test(s) FAILED')
     sys.exit(1)
 else:
-    print('airflowAdmin.cs: all cases PASS')
+    print('postgresAdmin.cs: all cases PASS')
 " 2>/dev/null || true

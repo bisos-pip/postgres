@@ -3,7 +3,7 @@
 
 """ #+begin_org
 * ~[Summary]~ :: A =CmndSvc= providing a quick direct-command cheat sheet for the
-  =airflow= CLI and the =airflow-*-sysd= systemd units on this host.
+  =psql= CLI and the =postgresql= systemd service on this host.
 #+end_org """
 
 ####+BEGIN: b:py3:cs:file/dblockControls :classification "cs-mu"
@@ -30,8 +30,8 @@
 ####+BEGIN: b:prog:file/particulars :authors ("./inserts/authors-mb.org")
 """ #+begin_org
 * *[[elisp:(org-cycle)][| Particulars |]]* :: This File, Authors, version
-** This File: /bxRepos/bisos-pip/airflow/py3/bin/quickAirflow.cs
-** File True Name: /bisos/git/auth/bxRepos/bisos-pip/airflow/py3/bin/quickAirflow.cs
+** This File: /bxRepos/bisos-pip/postgres/py3/bin/quickPostgres.cs
+** File True Name: /bisos/git/auth/bxRepos/bisos-pip/postgres/py3/bin/quickPostgres.cs
 ** Authors: Mohsen BANAN, http://mohsen.banan.1.byname.net/contact
 #+end_org """
 ####+END:
@@ -41,10 +41,10 @@
 * *[[elisp:(org-cycle)][| Particulars-csInfo |]]*
 #+end_org """
 import typing
-csInfo: typing.Dict[str, typing.Any] = { 'moduleName': ['airflow'], }
+csInfo: typing.Dict[str, typing.Any] = { 'moduleName': ['quickPostgres'], }
 csInfo['version'] = '202502215707'
 csInfo['status']  = 'inUse'
-csInfo['panel'] = 'quickAirflow-Panel.org'
+csInfo['panel'] = 'quickPostgres-Panel.org'
 csInfo['groupingType'] = 'IcmGroupingType-pkged'
 csInfo['cmndParts'] = 'IcmCmndParts[common] IcmCmndParts[param]'
 ####+END:
@@ -52,15 +52,13 @@ csInfo['cmndParts'] = 'IcmCmndParts[common] IcmCmndParts[param]'
 """ #+begin_org
 * [[elisp:(org-cycle)][| ~Description~ |]] :: [[file:/bisos/git/auth/bxRepos/blee-binders/bisos-core/PyFwrk/bisos-pip/bisos.cs/_nodeBase_/fullUsagePanel-en.org][BISOS CmndSvcs Panel]]   [[elisp:(org-cycle)][| ]]
 
-This is a =CmndSvc= that provides a quick cheat-sheet of direct =airflow= CLI
-and =systemctl=/=journalctl= commands for the =airflow.here= standalone×systemd
-installation on this host. It is a starting-point converted from
-=bisos.dockerProc='s =dockerCmnds.cs=; it will be expanded as bisos.airflow
-develops.
+This is a =CmndSvc= that provides a quick cheat-sheet of direct =psql=,
+=pg_*= and =systemctl=/=journalctl= commands for the PostgreSQL bedrock cluster
+on this host. Starting point -- it will be expanded as bisos.postgres develops.
 
 ** Status: Starting point -- not yet complete
 ** /[[elisp:(org-cycle)][| Planned Improvements |]]/ :
-*** TODO Flesh out DAG/task-level examples once bisos.airflow CSU Cmnds exist
+*** TODO Flesh out tenant-level examples once bisos.postgres CSU Cmnds exist
 #+end_org """
 
 ####+BEGIN: b:prog:file/orgTopControls :outLevel 1
@@ -175,16 +173,16 @@ class examples(cs.Cmnd):
         cs.examples.myName(cs.G.icmMyName(), cs.G.icmMyFullName())
         cs.examples.commonBrief()
 
-        airflowDirectCmnds().pyCmnd()
+        postgresDirectCmnds().pyCmnd()
 
         return(cmndOutcome)
 
 
-####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "airflowDirectCmnds" :comment "" :parsMand "" :parsOpt "perfName" :argsMin 0 :argsMax 0 :pyInv ""
+####+BEGIN: b:py3:cs:cmnd/classHead :cmndName "postgresDirectCmnds" :comment "" :parsMand "" :parsOpt "perfName" :argsMin 0 :argsMax 0 :pyInv ""
 """ #+begin_org
-*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<airflowDirectCmnds>>  =verify= parsOpt=perfName ro=cli   [[elisp:(org-cycle)][| ]]
+*  _[[elisp:(blee:menu-sel:outline:popupMenu)][±]]_ _[[elisp:(blee:menu-sel:navigation:popupMenu)][Ξ]]_ [[elisp:(outline-show-branches+toggle)][|=]] [[elisp:(bx:orgm:indirectBufOther)][|>]] *[[elisp:(blee:ppmm:org-mode-toggle)][|N]]*  CmndSvc-   [[elisp:(outline-show-subtree+toggle)][||]] <<postgresDirectCmnds>>  =verify= parsOpt=perfName ro=cli   [[elisp:(org-cycle)][| ]]
 #+end_org """
-class airflowDirectCmnds(cs.Cmnd):
+class postgresDirectCmnds(cs.Cmnd):
     cmndParamsMandatory = [ ]
     cmndParamsOptional = [ 'perfName', ]
     cmndArgsLen = {'Min': 0, 'Max': 0,}
@@ -203,97 +201,36 @@ class airflowDirectCmnds(cs.Cmnd):
         perfName = csParam.mappedValue('perfName', perfName)
 ####+END:
         self.cmndDocStr(f""" #+begin_org
-** [[elisp:(org-cycle)][| *CmndDesc:* | ]]  Provide direct examples of how to use the airflow CLI and this
-        host's airflow-*-sysd systemd units.
+** [[elisp:(org-cycle)][| *CmndDesc:* | ]]  Provide direct examples of how to use the PostgreSQL cluster
+        of this host. The administrator is the postgres OS account (peer auth).
         #+end_org """)
 
         literal = cs.examples.execInsert
 
-        cs.examples.menuChapter('=Direct Airflow Interface Commands=')
+        cs.examples.menuChapter('=Direct PostgreSQL Interface Commands=')
 
-        cs.examples.menuSection('/Airflow Environment/')
+        cs.examples.menuSection('/Cluster/')
+        literal("pg_lsclusters")
+        literal("systemctl status postgresql.service")
+        literal("sudo systemctl restart postgresql.service   # affects every tenant on this host")
+        literal("journalctl -u postgresql.service -f")
 
-        literal("echo $AIRFLOW_HOME")
-        literal("airflow version")
-        literal("airflow config list")
-        literal("airflow info")
+        cs.examples.menuSection('/Administering As postgres/')
+        literal("sudo -u postgres psql")
+        literal("sudo -u postgres psql -c '\\du'")
+        literal("sudo -u postgres psql -c '\\l'")
+        literal("sudo -u postgres psql -tAc 'show max_connections'")
 
-        cs.examples.menuSection('/Airflow DB (see airflow-db-sysd.pcs)/')
+        cs.examples.menuSection('/A Tenant: role and database named for the capability/')
+        literal("sudo -u postgres psql -c 'CREATE ROLE <name> LOGIN'")
+        literal("sudo -u postgres createdb -O <name> <name>")
+        literal("sudo -u <name> psql -d <name>   # peer auth: OS account maps to the like-named role")
 
-        literal("airflow db check")
-        literal("airflow db migrate")
+        cs.examples.menuSection('/Bedrock Materialization/')
+        literal("postgres-sbom.pcs -i sbom_fullUpdate")
+        literal("postgres-cbs.pcs -i cbs_materialize")
 
-        cs.examples.menuSection('/Airflow Users/')
-
-        # Airflow 3 has no `airflow users` command group --- SimpleAuthManager
-        # replaced it. See airflowAdmin.cs -i usersInfo, and Web UI Hints below.
-        literal("airflow config get-value core auth_manager")
-        literal("airflow config get-value core simple_auth_manager_users   # username:role, NOT passwords")
-
-        cs.examples.menuSection('/Airflow DAGs/')
-
-        literal("airflow dags list")
-        literal("airflow dags list-runs <dag_id>        # dag_id is POSITIONAL, not -d")
-        literal("airflow dags trigger <dag_id>")
-        literal("airflow tasks list <dag_id>")
-
-        cs.examples.menuSection('/systemd -- airflow-db-sysd.pcs, airflow-webserver-sysd.pcs, airflow-scheduler-sysd.pcs, airflow-triggerer-sysd.pcs/')
-
-        literal("systemctl status airflow-db.service")
-        literal("systemctl status airflow-webserver.service")
-        literal("systemctl status airflow-scheduler.service")
-        literal("systemctl status airflow-triggerer.service")
-        literal("systemctl restart airflow-webserver.service airflow-scheduler.service airflow-triggerer.service")
-
-        cs.examples.menuSection('/Logs/')
-
-        literal("journalctl -u airflow-webserver.service -f")
-        literal("journalctl -u airflow-scheduler.service -f")
-        literal("journalctl -u airflow-triggerer.service -f")
-        literal("journalctl -u airflow-dag-processor.service -f")
-        literal("ls -la $AIRFLOW_HOME/logs")
-
-        cs.examples.menuChapter('=Web UI Hints=')
-
-        cs.examples.menuSection('/Getting In/')
-
-        literal("# http://airflow.here         -- user: admin")
-        literal("sudo cat $AIRFLOW_HOME/simple_auth_manager_passwords.json.generated   # the password")
-        literal("airflow-sbom.pcs -i adminPasswd                                       # same, as root")
-        literal("# To set it:  echo '{\"admin\": \"airflow\"}' | sudo -u airflow tee that file")
-        literal("#             then: sudo systemctl restart airflow-webserver")
-
-        cs.examples.menuSection('/Where To Click/')
-
-        literal("# DAGs list   -- home page. Toggle at the left of each name pauses/unpauses.")
-        literal("#                New DAGs land PAUSED; nothing runs until unpaused.")
-        literal("# Trigger     -- the play button, on the DAG row or its detail page.")
-        literal("# Grid        -- runs x tasks, one coloured square per task instance.")
-        literal("# Graph       -- the dependency picture (start -> per-OSS tasks -> end).")
-        literal("# Gantt       -- shows pool queuing as a staircase: N concurrent, N = pool slots.")
-        literal("# Duration    -- per-task time across runs; where the slow OSSes show up.")
-        literal("# Logs tab    -- inside a task instance. stderr of the XU lands here.")
-
-        cs.examples.menuSection('/Reading What You See/')
-
-        literal("# A run is only as fast as its slowest single task --- pool size changes")
-        literal("# how many run at once, never how long one takes.")
-        literal("# Red across every task, none ever starting -> suspect the Execution API")
-        literal("# (AIRFLOW__CORE__EXECUTION_API_SERVER_URL), not the DAG.")
-        literal("# No DAGs listed at all -> suspect the dag-processor, not the scheduler:")
-        literal("#   airflow jobs check --job-type DagProcessorJob")
-
-        cs.examples.menuSection('/CLI Equivalents/')
-
-        literal("airflow dags trigger <dag_id>              # the play button")
-        literal("airflow dags unpause <dag_id>              # the toggle")
-        literal("airflow tasks test <dag_id> <task_id>      # run ONE task, no scheduling")
-        literal("airflow dags show <dag_id> --save /tmp/dag.png    # Graph view, needs graphviz pkg")
-        literal("# By hand the CLI needs BOTH: sudo -u airflow (DB is airflow-owned) and")
-        literal("# env AIRFLOW_HOME=... (/etc/default/airflow is read by systemd, not shells).")
-
-        return(cmndOutcome)
-
+        return cmndOutcome
 
 
 ####+BEGIN: blee:bxPanel:foldingSection :outLevel 0 :sep nil :title "Main" :anchor ""  :extraInfo "Framework DBlock"
