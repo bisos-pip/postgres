@@ -43,7 +43,7 @@ def longDescription():
 # b:py3:pypi:setup/version Arguments  :forSys t :forPyPi t :constant "666"
 ####+BEGIN: b:py3:pypi:setup/version :comment "Auto Detected"
 
-# ./pypiUploadVer DID NOT exist -- forPypiVersion=0.13 -- forLocalVersion=0.1 -- constant=NA
+# ./pypiUploadVer DID NOT exist -- forPypiVersion=0.1 -- forLocalVersion=0.1 -- constant=NA
 def pkgVersion():
         return '0.1'
 
@@ -55,16 +55,10 @@ def pkgVersion():
 requires = [
 "bisos",
 "bisos.b",
-"bisos.banna",
-"bisos.basics",
 "bisos.capability",
 "bisos.common",
 "bisos.csPlayer",
-"bisos.csSeed",
-"bisos.debian",
-"bisos.dnsCap",
 "bisos.sbom",
-"bisos.webCap",
 "setuptools==75.8.0",
 "wheel==0.38.4",
 ]
@@ -74,19 +68,13 @@ requires = [
 ####+BEGIN: b:py3:pypi:setup/scripts :comment ""
 
 scripts = [
-'bin/airflowAdmin.cs',
-'bin/airflow-assemble.cs',
-'bin/airflow-cbs.pcs',
-'bin/airflow-dag-processor-sysd.pcs',
-'bin/airflow-db-sysd.pcs',
-'bin/airflow-here-dns.pcs',
-'bin/airflow-sbom.pcs',
-'bin/airflow-scheduler-sysd.pcs',
-'bin/airflow-triggerer-sysd.pcs',
-'bin/airflow-webserver-sysd.pcs',
-'bin/airflow-wvd.pcs',
-'bin/cbmProc-airflow.spcs',
-'bin/quickAirflow.cs',
+'bin/cbmProc-postgres.spcs',
+'bin/dbClients-sbom.pcs',
+'bin/dbeaver-sbom.pcs',
+'bin/postgresAdmin.cs',
+'bin/postgres-cbs.pcs',
+'bin/postgres-sbom.pcs',
+'bin/quickPostgres.cs',
 ]
 ####+END:
 
@@ -102,7 +90,7 @@ data_files = [
 ####+BEGIN: b:py3:pypi:setup/funcArgs :comment "defaults to --auto--"
 
 setuptools.setup(
-    name=pkgName(),  # 'bisos.airflow'
+    name=pkgName(),  # 'bisos.postgres'
     version=pkgVersion(),
     packages=setuptools.find_packages(),
     scripts=scripts,
